@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoffeePOS Premium Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">G</div>
+        <div>
+          <h1>CoffeePOS Premium Pro</h1>
+          <p>Restaurante • Demo funcional</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-link active" data-view="dashboard">Resumen</button>
+        <button class="nav-link" data-view="mesas">Mesas</button>
+        <button class="nav-link" data-view="cocina">Cocina</button>
+        <button class="nav-link" data-view="compras">Compras</button>
+        <button class="nav-link" data-view="ventas">Ventas</button>
+        <button class="nav-link" data-view="catalogo">Catálogo</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="avatar" id="userInitials">GP</div>
+          <div>
+            <strong id="userName">Invitado</strong>
+            <p id="userRole">Sin sesión</p>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-full" id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-btn" id="toggleSidebar" aria-label="Abrir menú">☰</button>
+        <div>
+          <h2 id="viewTitle">Resumen del negocio</h2>
+          <p id="viewSubtitle">Control general del restaurante en tiempo real.</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="badge badge-success" id="sessionBadge">Sistema local listo</span>
+        </div>
+      </header>
+
+      <section id="dashboardView" class="view active">
+        <div class="hero-panel">
+          <div>
+            <span class="eyebrow">Panel operativo</span>
+            <h3>Una base profesional para que los estudiantes entiendan cómo funciona un sistema POS real.</h3>
+            <p>
+              Este proyecto incluye inicio de sesión, flujo de mesas, envío de pedidos a cocina,
+              registro de compras, ventas y panel administrativo con persistencia en el navegador.
+            </p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-view-link="mesas">Ir a mesas</button>
+            <button class="btn btn-secondary" data-view-link="cocina">Ver cocina</button>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <div class="grid-two">
+          <section class="card">
+            <div class="card-header">
+              <h3>Actividad reciente</h3>
+              <span class="badge">LocalStorage</span>
+            </div>
+            <div id="activityFeed" class="activity-feed"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <h3>Indicadores rápidos</h3>
+              <span class="badge badge-info">Hoy</span>
+            </div>
+            <div id="quickInsights" class="list-stack"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="mesasView" class="view">
+        <div class="section-head">
+          <div>
+            <h3>Gestión de mesas</h3>
+            <p>Selecciona una mesa, agrega productos y envía pedidos a cocina.</p>
+          </div>
+          <button class="btn btn-primary" id="newOrderBtn">Nuevo pedido rápido</button>
+        </div>
+        <div id="mesasGrid" class="mesas-grid"></div>
+      </section>
+
+      <section id="cocinaView" class="view">
+        <div class="section-head">
+          <div>
+            <h3>Panel de cocina</h3>
+            <p>Visualiza pedidos enviados por los meseros y cambia el estado de preparación.</p>
+          </div>
+          <button class="btn btn-secondary" id="refreshKitchenBtn">Actualizar vista</button>
+        </div>
+        <div id="kitchenBoard" class="kitchen-board"></div>
+      </section>
+
+      <section id="comprasView" class="view">
+        <div class="section-head">
+          <div>
+            <h3>Compras e inventario</h3>
+            <p>Registra compras del negocio y lleva control básico de abastecimiento.</p>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <section class="card">
+            <div class="card-header">
+              <h3>Nueva compra</h3>
+              <span class="badge badge-warning">Operación interna</span>
+            </div>
+            <form id="purchaseForm" class="form-grid">
+              <label>
+                Insumo
+                <input type="text" id="purchaseItem" placeholder="Ej: Harina, pollo, gaseosas" required />
+              </label>
+              <label>
+                Proveedor
+                <input type="text" id="purchaseSupplier" placeholder="Ej: Distribuidora Central" required />
+              </label>
+              <label>
+                Cantidad
+                <input type="number" id="purchaseQty" min="1" value="1" required />
+              </label>
+              <label>
+                Valor unitario
+                <input type="number" id="purchaseUnitPrice" min="0" step="0.01" value="0" required />
+              </label>
+              <label class="full">
+                Observación
+                <textarea id="purchaseNote" rows="3" placeholder="Detalles opcionales de la compra"></textarea>
+              </label>
+              <div class="full">
+                <button class="btn btn-primary" type="submit">Guardar compra</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <h3>Resumen de compras</h3>
+              <span class="badge badge-danger" id="purchaseTotalBadge">$0</span>
+            </div>
+            <div id="purchaseSummary" class="list-stack"></div>
+          </section>
+        </div>
+
+        <section class="card mt-16">
+          <div class="card-header">
+            <h3>Historial de compras</h3>
+            <span class="badge">Últimos movimientos</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Insumo</th>
+                  <th>Proveedor</th>
+                  <th>Cantidad</th>
+                  <th>Valor unitario</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="purchasesTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section id="ventasView" class="view">
+        <div class="section-head">
+          <div>
+            <h3>Ventas y facturación</h3>
+            <p>Consulta los pedidos pagados y revisa el rendimiento comercial.</p>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <section class="card">
+            <div class="card-header">
+              <h3>Resumen de ventas</h3>
+              <span class="badge badge-success" id="salesTotalBadge">$0</span>
+            </div>
+            <div id="salesSummary" class="list-stack"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-header">
+              <h3>Compraventa</h3>
+              <span class="badge badge-info">Margen estimado</span>
+            </div>
+            <div id="tradeSummary" class="list-stack"></div>
+          </section>
+        </div>
+
+        <section class="card mt-16">
+          <div class="card-header">
+            <h3>Pedidos facturados</h3>
+            <span class="badge">Ventas cerradas</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Mesa</th>
+                  <th>Mesero</th>
+                  <th>Productos</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="salesTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section id="catalogoView" class="view">
+        <div class="section-head">
+          <div>
+            <h3>Catálogo del restaurante</h3>
+            <p>Menú base para construir pedidos rápidos desde mesas.</p>
+          </div>
+        </div>
+        <div id="menuGrid" class="menu-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Acceso al sistema</span>
+          <h3>Iniciar sesión</h3>
+        </div>
+      </div>
+      <form id="loginForm" class="form-grid">
+        <label class="full">
+          Correo
+          <input type="email" id="loginEmail" value="admin@demo.com" required />
+        </label>
+        <label class="full">
+          Contraseña
+          <input type="password" id="loginPassword" value="admin123" required />
+        </label>
+        <div class="full login-help">
+          <p><strong>Usuario demo:</strong> admin@demo.com</p>
+          <p><strong>Contraseña demo:</strong> admin123</p>
+        </div>
+        <div class="full">
+          <button class="btn btn-primary btn-full" type="submit">Entrar al sistema</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="orderModal">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">Gestión de pedido</span>
+          <h3 id="orderModalTitle">Mesa 1</h3>
+        </div>
+        <button class="icon-btn" id="closeOrderModal">✕</button>
+      </div>
+
+      <div class="grid-two">
+        <section class="card light-card">
+          <div class="card-header">
+            <h3>Agregar productos</h3>
+            <span class="badge badge-info">Catálogo</span>
+          </div>
+          <div id="orderMenuList" class="product-selector"></div>
+        </section>
+
+        <section class="card light-card">
+          <div class="card-header">
+            <h3>Resumen del pedido</h3>
+            <span class="badge badge-warning" id="orderStatusBadge">Abierto</span>
+          </div>
+          <div id="currentOrderItems" class="order-items"></div>
+          <div class="summary-box">
+            <div><span>Subtotal</span><strong id="orderSubtotal">$0</strong></div>
+            <div><span>Servicio</span><strong id="orderService">$0</strong></div>
+            <div><span>Total</span><strong id="orderTotal">$0</strong></div>
+          </div>
+          <div class="action-row">
+            <button class="btn btn-secondary" id="saveOrderDraftBtn">Guardar borrador</button>
+            <button class="btn btn-primary" id="sendOrderToKitchenBtn">Enviar a cocina</button>
+            <button class="btn btn-success" id="markOrderPaidBtn">Marcar como pagado</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
